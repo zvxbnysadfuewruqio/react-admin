@@ -1,5 +1,6 @@
 import React from 'react'
-import memeoryUtils from '../../utils/memoryUtils'
+// import memeoryUtils from '../../utils/memoryUtils'
+import {connect} from 'react-redux'
 import {Redirect,Switch,Route} from 'react-router-dom'
 import { Layout } from 'antd';
 
@@ -20,13 +21,14 @@ const { Footer, Sider, Content } = Layout;
 
 /*后台管理的路由组件 */
 
-export default class Admin extends React.Component{
+class Admin extends React.Component{
 
   render(){
-    const user = memeoryUtils.user
-    if(!user._id) { return <Redirect to='/login'/> }
+    // const user = memeoryUtils.user
+    const user=this.props.user
+    if(!user||!user._id) { return <Redirect to='/login'/> }
     return (
-      <Layout style={{height:"100%"}}>
+      <Layout style={{minHeight:"100%"}}>
         <Sider>
           <LeftNav/>
         </Sider>
@@ -51,3 +53,8 @@ export default class Admin extends React.Component{
     )
   }
 }
+
+export default connect(
+  state=>({user:state.user}),
+  {}
+)(Admin)

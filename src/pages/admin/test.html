@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>年会抽奖</title>
+    
+
+    <style>
+        /*简单清除默认样式*/
+        * {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /*动画关键帧*/
+        @keyframes move {
+            0% {
+                transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+            }
+
+            100% {
+                transform: rotateX(720deg) rotateY(360deg) rotateZ(360deg);
+            }
+        }
+
+
+        /*来个背景色*/
+        html {
+
+            background-image: url('//bpic.588ku.com/back_pic/05/95/43/665d5e340d02c25.jpg!/fw/640/quality/90/unsharp/true/compress/true');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            height: 100%;
+        }
+
+        body {
+            position: relative;
+            height: 100%;
+        }
+
+        .raffle {
+            height: 100%;
+            /* display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            overflow-y: scroll; */
+        }
+
+        .cnt {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            /* flex-direction: row; */
+
+            justify-content: center;
+        }
+
+        div.wrap {
+            transform: scale(0);
+            /*上外边距设置*/
+            width: 100%;
+            /*给他一个宽度*/
+            perspective: 1000px;
+            /*景深设置，视图距元素的距离  相当于摄像机*/
+            display: flex;
+            justify-content: space-around;
+            box-sizing: border-box;
+            padding: 0 200px;
+            flex-wrap: wrap;
+            /* position: relative; */
+            /* top: 33%; */
+            /* transition: all 2s 2s; */
+        }
+
+        div.wrap.active {
+            transform: scale(1);
+        }
+
+        .wrap>div.cube {
+            width: 200px;
+            /*box设置宽度200像素*/
+            height: 200px;
+            /*设置高度200像素*/
+            position: relative;
+
+            /*开启相对定位，好让里面的元素开启定位时不会高度塌陷*/
+            color: #ff92ff;
+            /*字体的颜色*/
+            font-size: 36px;
+            /*字体大小*/
+            font-weight: 100;
+            /*字体细小*/
+            text-align: center;
+            /*文本字体左右居中*/
+            line-height: 200px;
+            /*行高设置，这样文本就在比box中是上下居中*/
+
+
+            transform-style: preserve-3d;
+            /*开启这个，表示所有元素在3D平面呈现*/
+            transform: rotateX(-50deg) rotateY(-50deg) rotateZ(0deg);
+            /*一开始的角度，视觉上看一下*/
+            animation: move 8s infinite linear;
+            /*启动动画的名字、时长、无限循环、匀速播放*/
+        }
+
+
+        /*大的正方体的设置*/
+        .cube>div {
+            width: 100%;
+            /*设置的宽度和父级一样*/
+            height: 100%;
+            /*设置的高度一样*/
+            border: 10px solid #f22000;
+            /*边框设置*/
+            border-radius: 20px;
+            /*设置一下圆角*/
+            position: absolute;
+            /*开启绝对定位，这样就全部叠在一起了*/
+            background-color: rgba(51, 51, 51, .3);
+            /*来个背景色，30%的透明度*/
+            transition: transform 0.3s ease-in;
+            /*过度变形的时间设置和快慢设置*/
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /*设置大的正方体的六个面的位置*/
+        .cube div.out-front {
+            transform: translateZ(100px);
+            /*设置前面的那一面的Z轴往前移*/
+        }
+
+        .cube div.out-back {
+            transform: translateZ(-100px) rotateY(180deg);
+            /*设置后面的那一面的Z轴往后移，Y轴转一下。使得的背面的那一面是面向背面的*/
+        }
+
+        .cube div.out-left {
+            transform: translateX(-100px) rotateY(-90deg);
+            /*设置左边的那一面在X轴上退一些，向左转*/
+        }
+
+        .cube div.out-right {
+            transform: translateX(100px) rotateY(90deg);
+            /*设置右边的那一面在X轴上进一些，向右转*/
+        }
+
+        .cube div.out-top {
+            transform: translateY(-100px) rotateX(90deg);
+            /*设置上边的那一面在Y轴上去一些，向后翻转*/
+        }
+
+        .cube div.out-bottom {
+            transform: translateY(100px) rotateX(-90deg);
+            /*设置下边的那一面在X轴下去一些，向前翻*/
+        }
+
+        /*小的正方体的设置*/
+        .cube>span {
+            display: block;
+            /*先转变为块级元素*/
+            width: 90px;
+            /*设置宽度，因为是小的正方体*/
+            height: 90px;
+            /*设置高度*/
+            background-color: #ffe7f9;
+            /*背景色*/
+            position: absolute;
+            /*开启绝对定位*/
+            top: 50px;
+            /*因为高度是100，是原来的一半。要居中就上下都一样的50*/
+            left: 50px;
+            /*同理，因为宽度是100，是原来的一半。要居中就左右都一样的50*/
+            border: 5px solid #f22000;
+            /*边框设置*/
+            opacity: 0.9;
+            /*透明度设置成90%*/
+            /*backface-visibility: hidden;*/
+            /*设置了透明度可以设置隐藏背面*/
+            border-radius: 30%;
+            /*圆角*/
+        }
+
+        /*设置小的正方体的六个面的位置*/
+        .cube span.in-front {
+            transform: translateZ(50px);
+            /*设置前面的那一面的Z轴往前移*/
+        }
+
+        .cube span.in-back {
+            transform: translateZ(-50px) rotateY(180deg);
+            /*设置后面的那一面的Z轴往后移，Y轴转一下。使得的背面的那一面是面向背面的*/
+        }
+
+        .cube span.in-left {
+            transform: translateX(-50px) rotateY(-90deg);
+            /*设置左边的那一面在X轴上退一些，向左转*/
+        }
+
+        .cube span.in-right {
+            transform: translateX(50px) rotateY(90deg);
+            /*设置右边的那一面在X轴上进一些，向右转*/
+        }
+
+        .cube span.in-top {
+            transform: translateY(-50px) rotateX(90deg);
+            /*设置上边的那一面在Y轴上去一些，向后翻转*/
+        }
+
+        .cube span.in-bottom {
+            transform: translateY(50px) rotateX(-90deg);
+            /*设置下边的那一面在X轴下去一些，向前翻*/
+        }
+
+        /*当鼠标滑过这个div的时候。过渡变化下面的事件*/
+        .wrap .cube div.out-front {
+            transform: translateZ(200px);
+            /*当鼠标滑过，前面就往前凸*/
+        }
+
+        .wrap .cube div.out-back {
+            transform: translateZ(-200px) rotateY(180deg);
+            /*当鼠标滑过，前面就往后跑，加了旋转是因为一开始是平面的，不加会变会原样*/
+        }
+
+        .wrap .cube div.out-left {
+            transform: translateX(-200px) rotateY(-90deg);
+            /*当鼠标滑过，左面就往左飞*/
+        }
+
+        .wrap .cube div.out-right {
+            transform: translateX(200px) rotateY(90deg);
+            /*当鼠标滑过，右面就往右进*/
+        }
+
+        .wrap .cube div.out-top {
+            transform: translateY(-200px) rotateX(90deg);
+            /*当鼠标滑过，上面就往上冒*/
+        }
+
+        .wrap .cube div.out-bottom {
+            transform: translateY(200px) rotateX(-90deg);
+            /*当鼠标滑过，下面就往下弹*/
+        }
+
+
+
+        .img {
+            background-image: url('//bpic.588ku.com//back_origin_min_pic/19/07/03/77fda0a19a77f97c82c19168527e6be6.jpg!/fw/750/quality/99/unsharp/true/compress/true');
+            background-size: 100% 100%;
+        }
+
+        /* 展示中奖人员名单 */
+        .luck {
+            position: relative;
+            z-index: 9;
+            width: 100%;
+            box-sizing: border-box;
+            transform: scale(0);
+            padding: 0 200px;
+            height: 55%;
+            /* overflow-y: scroll; */
+            /* transition: all 2s ; */
+        }
+
+        .luck .luck-item {
+            float: left;
+            /* padding: 10px 20px; */
+            width: 8vw;
+            height: 8vw;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: center; */
+            align-items: center;
+            /* margin-bottom: 20px; */
+        }
+
+        .luck .luck-item img {
+            width: 100%;
+            height: 80%;
+            border-radius: 50%;
+            box-shadow: 5px 5px 10px 0 rgba(0,0,0,.125);
+        }
+
+        .luck .luck-item span {
+            font-size: 13px;
+            color: #fff;
+            /* margin-top: 10px; */
+        }
+
+        .luck.active {
+            transform: scale(1);
+
+        }
+
+        .btn {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 200px;
+            height: 100px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="raffle">
+        <div class="btn">
+            <span class="start"> 开始抽奖 </span>
+            <span class="close"> 开奖啦 </span>
+        </div>
+        <div class="cnt">
+            <div class="wrap">
+                <!--最大的空间div-->
+                <div class="cube">
+                    <!--正方体的box-->
+                    <!--这个是大的正方体的六面-->
+                    <div class="out-front img"></div>
+                    <div class="out-back img"></div>
+                    <div class="out-left img"></div>
+                    <div class="out-right img"></div>
+                    <div class="out-top img"></div>
+                    <div class="out-bottom img"></div>
+                    <!--这个是小的正方体的六面-->
+                    <span class="in-front img">
+
+                    </span>
+                    <span class="in-back img">
+
+                    </span>
+                    <span class="in-left img">
+
+                    </span>
+                    <span class="in-right img">
+
+                    </span>
+                    <span class="in-top img">
+
+                    </span>
+                    <span class="in-bottom img">
+
+
+                    </span>
+
+                </div>
+                <div class="cube2 cube">
+                    <!--正方体的box-->
+                    <!--这个是大的正方体的六面-->
+                    <div class="out-front img"></div>
+                    <div class="out-back img"></div>
+                    <div class="out-left img"></div>
+                    <div class="out-right img"></div>
+                    <div class="out-top img"></div>
+                    <div class="out-bottom img"></div>
+                    <!--这个是小的正方体的六面-->
+                    <span class="in-front img">
+
+                    </span>
+                    <span class="in-back img">
+
+                    </span>
+                    <span class="in-left img">
+
+                    </span>
+                    <span class="in-right img">
+
+                    </span>
+                    <span class="in-top img">
+
+                    </span>
+                    <span class="in-bottom img">
+
+
+                    </span>
+
+                </div>
+                <div class="cube3 cube">
+                    <!--正方体的box-->
+                    <!--这个是大的正方体的六面-->
+                    <div class="out-front img"></div>
+                    <div class="out-back img"></div>
+                    <div class="out-left img"></div>
+                    <div class="out-right img"></div>
+                    <div class="out-top img"></div>
+                    <div class="out-bottom img"></div>
+                    <!--这个是小的正方体的六面-->
+                    <span class="in-front img">
+
+                    </span>
+                    <span class="in-back img">
+
+                    </span>
+                    <span class="in-left img">
+
+                    </span>
+                    <span class="in-right img">
+
+                    </span>
+                    <span class="in-top img">
+
+                    </span>
+                    <span class="in-bottom img">
+
+                    </span>
+
+                </div>
+
+            </div>
+            <div class="luck active">
+       
+        
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- <script src="./jquery.js"></script> -->
+    <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
+    <script>
+        let imgList = [];
+        let luckList = []
+        $.support.cors = true;
+        $.ajaxSetup({
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json"
+
+        });
+        //获取参与抽奖人员头像
+        function getUser() {
+            $.ajax({
+                url: "http://weixin.sujin1688.com/sjbj/index.php/choujiang/lottery/getHeadImg",
+                data: JSON.stringify({
+
+                }),
+                success: function (res) {
+                    imgList = res;
+                    getImg()
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+        };
+        //获取中奖人员名单
+        function getLuckList() {
+            $.ajax({
+                url: "http://weixin.sujin1688.com/sjbj/index.php/choujiang/lottery/getlastdata",
+                data: JSON.stringify({
+
+                }),
+                success: function (res) {
+                     //获取的中奖人员头像展示在页面上
+                    var txt = ``;
+                    for (let item of res) {
+                        txt += `<div class="luck-item">
+                                        <img src="${item.headimgurl}" alt="">
+                                        <span>${item.nickname}</span>
+                                      </div>`
+                    }
+                    $(".luck").append(txt);
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+        };
+        //获取展示在动画页面上的头像
+        function getImg() {
+            setInterval(() => {
+                imgList.sort((a, b) => Math.random() - 0.5)
+                var oImg = $('.img');
+                var len = oImg.length;
+                for (var i = 0; i < len; i++) {
+                    if (imgList.length < len) {
+                        imgList.push(...imgList)
+                    }
+                    $(oImg[i]).css({
+                        backgroundImage: 'url(' + imgList[i].image + ')',
+                        transition: 'all 10ms;'
+                    })
+                }
+            }, 800)
+        }
+       
+     
+        //开始动画
+        function startAnimal() {
+            $(".wrap").addClass("active").css({
+                transition: 'all 2s 2s'
+            })
+            $(".luck").removeClass("active").css({
+                transition: 'all 2s '
+            })
+        }
+        //展示中奖头像
+        function showLuckList() {
+            $(".wrap").removeClass("active").css({
+                transition: 'all 2s'
+            })
+            $(".luck").addClass("active").css({
+                transition: 'all 2s 2s'
+            })
+        }
+        getLuckList()
+        getUser()
+        
+        $(".start").click(startAnimal)
+        $(".close").click(showLuckList)
+    </script>
+</body>
+
+</html>

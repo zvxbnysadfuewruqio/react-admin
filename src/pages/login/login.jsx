@@ -1,13 +1,16 @@
 import React from 'react'
 import {Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 import './login.less'
 import logo from '../../assets/images/logo.png'
 
-import { Form, Icon, Input, Button ,message} from 'antd';
+import { Form, Icon, Input, Button} from 'antd';
 
-import {reqLogin} from '../../api'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
+import {login} from '../../redux/actions'
+
+// import {reqLogin} from '../../api'
+// import memoryUtils from '../../utils/memoryUtils'
+// import storageUtils from '../../utils/storageUtils'
 
 
 class Login extends React.Component{
@@ -19,16 +22,19 @@ class Login extends React.Component{
         //校验成功
         const {username,password}=values
         // console.log('提交: ', username,password);
-        const res= await reqLogin(username,password)
-        if(res.status===0){
-          message.success('登录成功')
-          memoryUtils.user = res.data
-          storageUtils.saveUser(res.data)
-          //跳转到管理界面
-          this.props.history.replace('/')
-        }else{
-          message.error(res.msg)
-        }
+        // const res= await reqLogin(username,password)
+        // if(res.status===0){
+        //   message.success('登录成功')
+        //   memoryUtils.user = res.data
+        //   storageUtils.saveUser(res.data)
+        //   //跳转到管理界面
+        //   this.props.history.replace('/home')
+        // }else{
+        //   message.error(res.msg)
+        // }
+
+        this.props.login(username,password)
+        // this.props.history.replace('/home')
       }else{
         //校验失败
         console.log(err);
@@ -55,10 +61,15 @@ class Login extends React.Component{
   }
 
   render(){
-    const user=memoryUtils.user
-    console.log(user)
+    const user=this.props.user
+    // const user=memoryUtils.user
+    // console.log(user)
     if(user._id){
-      return <Redirect to='/'/>
+      // message.success('登录成功')
+      return <Redirect to='/home'/>
+    }
+    if(user.errorMsg){
+      // message.error(user.errorMsg)
     }
 
     const { getFieldDecorator } = this.props.form;
@@ -110,5 +121,8 @@ class Login extends React.Component{
     )
   }
 }
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(Login);
-export default WrappedNormalLoginForm
+const WrappedNormalLoginForm = Form.create()(Login);
+export default connect(
+  state=>({user:state.user}),
+  {login}
+)(WrappedNormalLoginForm)
